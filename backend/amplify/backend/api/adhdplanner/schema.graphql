@@ -1,0 +1,519 @@
+# ADHD Family Planner GraphQL Schema
+# Supports offline-first architecture with DataStore sync
+# Multi-tenant design with household-based isolation
+
+type User
+  @model
+  @auth(rules: [
+    { allow: owner, ownerField: "id" }
+    { allow: groups, groups: ["Admins"] }
+  ]) {
+  id: ID!
+  email: AWSEmail!
+  name: String!
+  avatarUrl: String
+  preferences: UserPreferences
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  
+  # Relationships
+  memberships: [Membership] @hasMany(indexName: "byUser", fields: ["id"])
+  authoredMessages: [Message] @hasMany(indexName: "byAuthor", fields: ["id"])
+  assignedTasks: [Task] @hasMany(indexName: "byAssignee", fields: ["id"])
+}
+
+type UserPreferences {
+  themeKey: ThemeKey!
+  colorMode: ColorMode!
+  notificationSettings: NotificationSettings!
+  timeZone: String!
+  language: String!
+}
+
+enum ThemeKey {
+  PLANNER_ORIGINAL
+  LOW_STIM
+}
+
+enum ColorMode {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+type NotificationSettings {
+  pushEnabled: Boolean!
+  emailEnabled: Boolean!
+  quietHoursStart: String # HH:MM format
+  quietHoursEnd: String   # HH:MM format
+  reminderDefaults: [ReminderDefault!]!
+}
+
+type ReminderDefault {
+  timeOfDay: String! # HH:MM format
+  label: String!      # e.g., "Morning", "Afternoon", "Evening"
+}
+
+type Household
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["Admins"] }
+    { allow: owner, ownerField: "adminUserId" }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  name: String!
+  adminUserId: ID! @index(name: "byAdmin")
+  inviteCode: String
+  settings: HouseholdSettings
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  
+  # Relationships
+  memberships: [Membership] @hasMany(indexName: "byHousehold", fields: ["id"])
+  routines: [Routine] @hasMany(indexName: "byHousehold", fields: ["id"])
+  tasks: [Task] @hasMany(indexName: "byHousehold", fields: ["id"])
+  events: [Event] @hasMany(indexName: "byHousehold", fields: ["id"])
+  messages: [Message] @hasMany(indexName: "byHousehold", fields: ["id"])
+  categories: [Category] @hasMany(indexName: "byHousehold", fields: ["id"])
+  layoutConfigs: [LayoutConfig] @hasMany(indexName: "byHousehold", fields: ["id"])
+}
+
+type HouseholdSettings {
+  timeZone: String!
+  defaultReminderTimes: [String!]! # HH:MM format
+  autoArchiveCompletedTasks: Boolean!
+  allowChildSelfAssignment: Boolean!
+  requireParentApproval: Boolean!
+}
+
+type Membership
+  @model
+  @auth(rules: [
+    { allow: owner, ownerField: "userId" }
+    { allow: groups, groups: ["Admins"] }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  userId: ID! @index(name: "byUser")
+  householdId: ID! @index(name: "byHousehold")
+  role: MemberRole!
+  nickname: String
+  color: String # Hex color for calendar/UI
+  isActive: Boolean!
+  joinedAt: AWSDateTime!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  
+  # Relationships
+  user: User @belongsTo(fields: ["userId"])
+  household: Household @belongsTo(fields: ["householdId"])
+}
+
+enum MemberRole {
+  ADMIN
+  PARENT_A
+  PARENT_B
+  CHILD
+  CAREGIVER
+  GUEST
+}
+
+type Category
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["Admins"] }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  householdId: ID! @index(name: "byHousehold")
+  slug: String!
+  label: String!
+  description: String
+  icon: String
+  colorKey: String!
+  isSystem: Boolean! # System categories can't be deleted
+  isActive: Boolean!
+  sortOrder: Int!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  
+  # Relationships
+  household: Household @belongsTo(fields: ["householdId"])
+  routines: [Routine] @hasMany(indexName: "byCategory", fields: ["id"])
+  tasks: [Task] @hasMany(indexName: "byCategory", fields: ["id"])
+  layoutConfigs: [LayoutConfig] @hasMany(indexName: "byCategory", fields: ["id"])
+}
+
+type LayoutConfig
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["Admins"] }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  householdId: ID! @index(name: "byHousehold")
+  categoryId: ID! @index(name: "byCategory")
+  sections: [SectionConfig!]!
+  isActive: Boolean!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  
+  # Relationships
+  household: Household @belongsTo(fields: ["householdId"])
+  category: Category @belongsTo(fields: ["categoryId"])
+}
+
+type SectionConfig {
+  id: ID!
+  type: SectionType!
+  title: String!
+  cadence: TaskCadence!
+  sortOrder: Int!
+  displayOptions: SectionDisplayOptions!
+}
+
+type SectionDisplayOptions {
+  showTimeEstimates: Boolean!
+  groupByAssignee: Boolean!
+  showCompletionRate: Boolean!
+  maxItems: Int
+  defaultView: SectionView!
+}
+
+enum SectionType {
+  CHECKLIST
+  CALENDAR
+  ROUTINE
+  QUICK_WINS
+  CUSTOM
+}
+
+enum SectionView {
+  LIST
+  GRID
+  CALENDAR
+  KANBAN
+}
+
+type Routine
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["Admins"] }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  householdId: ID! @index(name: "byHousehold")
+  categoryId: ID! @index(name: "byCategory")
+  title: String!
+  description: String
+  cadence: TaskCadence!
+  isQuickWin: Boolean! # ≤5 minutes
+  isActive: Boolean!
+  sortOrder: Int!
+  estimatedMinutes: Int
+  instructions: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  
+  # Relationships
+  household: Household @belongsTo(fields: ["householdId"])
+  category: Category @belongsTo(fields: ["categoryId"])
+  steps: [RoutineStep] @hasMany(indexName: "byRoutine", fields: ["id"])
+  tasks: [Task] @hasMany(indexName: "byRoutine", fields: ["id"])
+}
+
+enum TaskCadence {
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+  AS_NEEDED
+  CUSTOM
+}
+
+type RoutineStep
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["Admins"] }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  routineId: ID! @index(name: "byRoutine")
+  title: String!
+  description: String
+  estimatedMinutes: Int
+  sortOrder: Int!
+  isOptional: Boolean!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  
+  # Relationships
+  routine: Routine @belongsTo(fields: ["routineId"])
+}
+
+type Task
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["Admins"] }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  householdId: ID! @index(name: "byHousehold")
+  routineId: ID @index(name: "byRoutine")
+  categoryId: ID @index(name: "byCategory")
+  assigneeUserId: ID @index(name: "byAssignee")
+  
+  title: String!
+  description: String
+  status: TaskStatus!
+  priority: TaskPriority!
+  
+  # Time management
+  estimatedMinutes: Int
+  actualMinutes: Int
+  dueAt: AWSDateTime
+  reminderAt: AWSDateTime
+  completedAt: AWSDateTime
+  
+  # ADHD support features
+  efTags: [EFTag!] # Executive Function tags
+  isQuickWin: Boolean! # ≤5 minutes
+  energyLevel: EnergyLevel # Required energy to complete
+  
+  # Metadata
+  notes: String
+  attachments: [String!] # S3 object keys
+  recurringPattern: RecurringPattern
+  
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  
+  # Relationships
+  household: Household @belongsTo(fields: ["householdId"])
+  routine: Routine @belongsTo(fields: ["routineId"])
+  category: Category @belongsTo(fields: ["categoryId"])
+  assignee: User @belongsTo(fields: ["assigneeUserId"])
+  subtasks: [Task] @hasMany(indexName: "byParentTask", fields: ["id"])
+  parentTask: Task @belongsTo(fields: ["parentTaskId"])
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING
+  DONE
+  SKIPPED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum EFTag {
+  WORKING_MEMORY
+  PLANNING
+  ORGANIZATION
+  ATTENTION
+  TIME_MANAGEMENT
+  SELF_REGULATION
+  COGNITIVE_FLEXIBILITY
+  IMPULSE_CONTROL
+}
+
+enum EnergyLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+type RecurringPattern {
+  type: RecurrenceType!
+  interval: Int!
+  daysOfWeek: [Int!] # 0=Sunday, 1=Monday, etc.
+  dayOfMonth: Int
+  endDate: AWSDateTime
+  maxOccurrences: Int
+}
+
+enum RecurrenceType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+type Event
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["Admins"] }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  householdId: ID! @index(name: "byHousehold")
+  title: String!
+  description: String
+  location: String
+  
+  # Time
+  startsAt: AWSDateTime!
+  endsAt: AWSDateTime!
+  isAllDay: Boolean!
+  timeZone: String
+  
+  # Attendees
+  attendeeRoles: [MemberRole!]!
+  attendeeUserIds: [ID!]
+  
+  # Metadata
+  color: String
+  category: EventCategory!
+  reminderSettings: [EventReminder!]
+  recurringPattern: RecurringPattern
+  
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  
+  # Relationships
+  household: Household @belongsTo(fields: ["householdId"])
+  relatedTasks: [Task] @manyToMany(relationName: "EventTasks")
+}
+
+enum EventCategory {
+  FAMILY
+  SCHOOL
+  WORK
+  MEDICAL
+  SOCIAL
+  MAINTENANCE
+  PERSONAL
+  OTHER
+}
+
+type EventReminder {
+  type: ReminderType!
+  minutesBefore: Int!
+  message: String
+}
+
+enum ReminderType {
+  PUSH_NOTIFICATION
+  EMAIL
+  SMS
+  POPUP
+}
+
+type Message
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["Admins"] }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  householdId: ID! @index(name: "byHousehold")
+  authorUserId: ID! @index(name: "byAuthor")
+  
+  body: String!
+  messageType: MessageType!
+  
+  # Context linking
+  contextType: MessageContextType
+  contextId: ID
+  
+  # Threading
+  threadId: ID @index(name: "byThread")
+  parentMessageId: ID
+  
+  # Metadata
+  isSystem: Boolean! # System-generated vs user-generated
+  isRead: Boolean!
+  isPinned: Boolean!
+  
+  createdAt: AWSDateTime! # Immutable timestamp
+  updatedAt: AWSDateTime!
+  
+  # Relationships
+  household: Household @belongsTo(fields: ["householdId"])
+  author: User @belongsTo(fields: ["authorUserId"])
+  replies: [Message] @hasMany(indexName: "byParentMessage", fields: ["id"])
+  parentMessage: Message @belongsTo(fields: ["parentMessageId"])
+}
+
+enum MessageType {
+  TEXT
+  SYSTEM_NOTIFICATION
+  TASK_UPDATE
+  EVENT_REMINDER
+  CELEBRATION
+  CHECK_IN
+}
+
+enum MessageContextType {
+  TASK
+  EVENT
+  ROUTINE
+  GENERAL
+  SYSTEM
+}
+
+# Roadmap types (for future implementation)
+type Streak
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["Admins"] }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  householdId: ID! @index(name: "byHousehold")
+  userId: ID! @index(name: "byUser")
+  type: StreakType!
+  currentCount: Int!
+  longestCount: Int!
+  isActive: Boolean!
+  lastActivityDate: AWSDate!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum StreakType {
+  DAILY_TASKS
+  WEEKLY_ROUTINES
+  QUICK_WINS
+  CATEGORY_SPECIFIC
+  CUSTOM
+}
+
+type Reward
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["Admins"] }
+    { allow: private, provider: userPools }
+  ]) {
+  id: ID!
+  householdId: ID! @index(name: "byHousehold")
+  title: String!
+  description: String
+  pointsCost: Int!
+  isAvailable: Boolean!
+  maxRedemptions: Int
+  currentRedemptions: Int!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+# Database indexes for performance
+type Subscription {
+  onTaskUpdated(householdId: ID!): Task
+    @aws_subscribe(mutations: ["createTask", "updateTask", "deleteTask"])
+  
+  onMessageCreated(householdId: ID!): Message
+    @aws_subscribe(mutations: ["createMessage"])
+  
+  onEventUpdated(householdId: ID!): Event
+    @aws_subscribe(mutations: ["createEvent", "updateEvent", "deleteEvent"])
+}

@@ -1,0 +1,16 @@
+
+> adhd-planner-web@1.0.0 dev /Users/arlonwilber/Library/CloudStorage/GoogleDrive-awilber@wiredtriangle.com/Shared drives/AW/Personal/Projects/jarvis/apps/web
+> vite
+
+
+  VITE v4.4.5  ready in 925 ms
+
+  ➜  Local:   http://localhost:3020/
+  ➜  Network: http://192.168.1.16:3020/
+[vite:css] @import must precede all other statements (besides @charset or empty @layer)
+17 |  
+18 |  /* Import Inter font */
+19 |  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+   |   ^
+20 |  
+21 |  /* React Native Web compatibility */

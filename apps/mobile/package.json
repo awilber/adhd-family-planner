@@ -1,0 +1,108 @@
+{
+  "name": "adhd-planner-mobile",
+  "version": "1.0.0",
+  "description": "ADHD Family Planner - Mobile App",
+  "main": "expo-router/entry",
+  "scripts": {
+    "dev": "expo start",
+    "start": "expo start --clear",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build": "expo export",
+    "build:ios": "eas build --platform ios",
+    "build:android": "eas build --platform android",
+    "build:all": "eas build --platform all",
+    "submit:ios": "eas submit --platform ios",
+    "submit:android": "eas submit --platform android",
+    "test": "jest",
+    "test:unit": "jest --passWithNoTests",
+    "test:integration": "detox test",
+    "test:e2e": "detox test --configuration ios.sim.release",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .expo dist node_modules"
+  },
+  "dependencies": {
+    "@adhd-planner/ui": "workspace:*",
+    "@adhd-planner/models": "workspace:*",
+    "@adhd-planner/utils": "workspace:*",
+    "@aws-amplify/react-native": "^1.0.8",
+    "@expo/vector-icons": "^13.0.0",
+    "@react-native-async-storage/async-storage": "1.18.2",
+    "@react-navigation/bottom-tabs": "^6.5.8",
+    "@react-navigation/native": "^6.1.7",
+    "@react-navigation/stack": "^6.3.17",
+    "aws-amplify": "^5.3.8",
+    "expo": "~49.0.0",
+    "expo-app-loading": "~2.1.0",
+    "expo-constants": "~14.4.2",
+    "expo-device": "~5.4.0",
+    "expo-font": "~11.4.0",
+    "expo-haptics": "~12.4.0",
+    "expo-linking": "~5.0.2",
+    "expo-notifications": "~0.20.1",
+    "expo-router": "2.0.0",
+    "expo-splash-screen": "~0.20.4",
+    "expo-status-bar": "~1.6.0",
+    "react": "18.2.0",
+    "react-native": "0.72.3",
+    "react-native-gesture-handler": "~2.12.0",
+    "react-native-reanimated": "~3.3.0",
+    "react-native-safe-area-context": "4.6.3",
+    "react-native-screens": "~3.22.0",
+    "react-native-svg": "13.9.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@babel/preset-env": "^7.20.0",
+    "@babel/runtime": "^7.20.0",
+    "@expo/webpack-config": "^19.0.0",
+    "@testing-library/jest-native": "^5.4.2",
+    "@testing-library/react-native": "^12.1.2",
+    "@types/react": "~18.2.14",
+    "@types/react-native": "~0.72.2",
+    "babel-plugin-module-resolver": "^5.0.0",
+    "detox": "^20.7.2",
+    "jest": "^29.6.1",
+    "jest-expo": "~49.0.0",
+    "typescript": "^5.1.6"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-native/extend-expect"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
+    ]
+  },
+  "detox": {
+    "testRunner": "jest",
+    "runnerConfig": "e2e/config.json",
+    "configurations": {
+      "ios.sim.debug": {
+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/ADHDPlanner.app",
+        "build": "xcodebuild -workspace ios/ADHDPlanner.xcworkspace -scheme ADHDPlanner -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+        "type": "ios.simulator",
+        "device": {
+          "type": "iPhone 14"
+        }
+      },
+      "ios.sim.release": {
+        "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/ADHDPlanner.app",
+        "build": "xcodebuild -workspace ios/ADHDPlanner.xcworkspace -scheme ADHDPlanner -configuration Release -sdk iphonesimulator -derivedDataPath ios/build",
+        "type": "ios.simulator",
+        "device": {
+          "type": "iPhone 14"
+        }
+      }
+    }
+  },
+  "expo": {
+    "install": {
+      "exclude": ["react-native-safe-area-context"]
+    }
+  }
+}

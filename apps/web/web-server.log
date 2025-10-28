@@ -1,0 +1,7 @@
+
+> adhd-planner-web@1.0.0 dev /Users/arlonwilber/Library/CloudStorage/GoogleDrive-awilber@wiredtriangle.com/Shared drives/AW/Personal/Projects/jarvis/apps/web
+> vite
+
+sh: vite: command not found
+ ELIFECYCLE  Command failed.
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?
