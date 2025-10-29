@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { ThemeProvider, Button, SectionCard, ChecklistItem, useThemeContext } from '@personal-planner/ui';
+import { ThemeProvider, Button, SectionCard, ChecklistItem, useThemeContext, TopBanner } from '@personal-planner/ui';
 import { formatTimeEstimate, isQuickWin } from '@personal-planner/utils';
 import { allTasks, getQuickWinTasks, weeklyTasks, speedCleaningTasks, monthlyTasks, PlannerTask } from '@personal-planner/models/src/plannerData';
 
@@ -34,10 +34,12 @@ function AppContent() {
   const monthlyKitchenTasks = tasks.filter(task => task.category === 'monthly' && task.room === 'Kitchen');
 
   return (
-    <ScrollView 
-      style={{ flex: 1, backgroundColor: theme.colors.neutral[50] }}
-      contentContainerStyle={{ padding: 12 }}
-    >
+    <View style={{ flex: 1, backgroundColor: theme.colors.neutral[50] }}>
+      <TopBanner />
+      <ScrollView 
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingTop: 80, padding: 12 }}
+      >
       <View style={{ 
         maxWidth: 1200, 
         marginLeft: 'auto', 
@@ -394,7 +396,8 @@ function AppContent() {
           {/* Mobile layout would go here - for now keeping desktop 3-column */}
         </View>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

@@ -4,6 +4,7 @@ import { themes, Theme, ThemeKey } from './tokens';
 interface ThemeContextType {
   theme: Theme;
   themeName: ThemeKey;
+  currentTheme: ThemeKey;
   setTheme: (themeName: ThemeKey) => void;
   isDark: boolean;
   toggleColorMode: () => void;
@@ -45,6 +46,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   const contextValue: ThemeContextType = {
     theme,
     themeName,
+    currentTheme: themeName,
     setTheme,
     isDark,
     toggleColorMode,

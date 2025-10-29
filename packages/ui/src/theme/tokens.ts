@@ -253,6 +253,66 @@ export const themes = {
       },
     },
   },
+  'midnight': {
+    name: 'Midnight',
+    colors: {
+      ...colors,
+      primary: {
+        50: '#1a1a2e',
+        100: '#16213e',
+        200: '#0f3460',
+        300: '#0e4b99',
+        400: '#2e86ab',
+        500: '#a23b72', // Rich magenta
+        600: '#f18f01', // Warm amber
+        700: '#c73e1d', // Deep red
+        800: '#8b0000', // Dark red
+        900: '#2d1b69', // Deep purple
+      },
+      categories: {
+        cleaning: '#f18f01',    // Warm amber
+        schedule: '#2e86ab',    // Ocean blue
+        seasonal: '#a23b72',    // Rich magenta
+        maintenance: '#6a4c93', // Deep purple
+        quick: '#00b4d8',       // Bright cyan
+        notes: '#ff6b6b',       // Coral red
+      },
+      // Dark mode with warm undertones
+      neutral: {
+        50: '#0a0a0f',   // Very dark blue-black
+        100: '#1a1a2e',  // Dark navy
+        200: '#16213e',  // Card backgrounds
+        300: '#2a3a5c',  // Borders
+        400: '#6c7b95',  // Muted text
+        500: '#9bb0d3',  // Secondary text
+        600: '#c7d2fe',  // Primary text
+        700: '#e0e7ff',  // High contrast text
+        800: '#f1f5f9',  // Very high contrast
+        900: '#ffffff',  // Maximum contrast
+      },
+    },
+    fonts,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    spacing,
+    borderRadius,
+    shadows: {
+      sm: '0 1px 3px 0 rgba(0, 0, 0, 0.3)',
+      base: '0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+      md: '0 10px 15px -3px rgba(0, 0, 0, 0.3)',
+      lg: '0 20px 25px -5px rgba(0, 0, 0, 0.4)',
+      xl: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+    },
+    components: {
+      ...components,
+      card: {
+        ...components.card,
+        backgroundColor: '#16213e', // Dark navy card background
+        borderColor: '#2a3a5c',     // Subtle border
+      },
+    },
+  },
 } as const;
 
 export type Theme = typeof themes[keyof typeof themes];

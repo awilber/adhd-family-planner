@@ -13,6 +13,9 @@ export type { SectionCardProps } from './components/SectionCard';
 export { ChecklistItem } from './components/ChecklistItem';
 export type { ChecklistItemProps } from './components/ChecklistItem';
 
+export { ThemeSelector } from './components/ThemeSelector';
+export { TopBanner } from './components/TopBanner';
+
 // Additional components (to be implemented)
 // export { RoutineHeader } from './components/RoutineHeader';
 // export { CalendarStrip } from './components/CalendarStrip';
