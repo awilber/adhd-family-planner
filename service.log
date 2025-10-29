@@ -7,10 +7,10 @@
 > vite
 
 
-  VITE v4.4.5  ready in 305 ms
+  VITE v4.4.5  ready in 345 ms
 
-  ➜  Local:   http://localhost:3021/
-  ➜  Network: http://192.168.1.16:3021/
+  ➜  Local:   http://localhost:3022/
+  ➜  Network: http://192.168.1.16:3022/
 [vite:css] @import must precede all other statements (besides @charset or empty @layer)
 17 |  
 18 |  /* Import Inter font */

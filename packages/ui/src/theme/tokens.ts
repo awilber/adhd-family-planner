@@ -177,6 +177,40 @@ export const themes = {
     shadows,
     components,
   },
+  'dark': {
+    name: 'Dark Mode',
+    colors: {
+      ...colors,
+      // Invert neutral colors for dark mode
+      neutral: {
+        50: '#171717',   // Dark background
+        100: '#262626',  // Slightly lighter
+        200: '#404040',  // Card backgrounds
+        300: '#525252',  // Borders
+        400: '#737373',  // Muted text
+        500: '#a3a3a3',  // Secondary text
+        600: '#d4d4d4',  // Primary text
+        700: '#e5e5e5',  // High contrast text
+        800: '#f5f5f5',  // Very high contrast
+        900: '#fafafa',  // Maximum contrast
+      },
+    },
+    fonts,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    spacing,
+    borderRadius,
+    shadows,
+    components: {
+      ...components,
+      card: {
+        ...components.card,
+        backgroundColor: '#404040', // Dark card background
+        borderColor: '#525252',     // Dark border
+      },
+    },
+  },
   'low-stim': {
     name: 'Low Stimulation',
     colors: {
