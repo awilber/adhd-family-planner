@@ -1,7 +1,7 @@
 {
-  "name": "adhd-planner-mobile",
+  "name": "personal-planner-mobile",
   "version": "1.0.0",
-  "description": "ADHD Family Planner - Mobile App",
+  "description": "Personal Planner - Mobile App",
   "main": "expo-router/entry",
   "scripts": {
     "dev": "expo start",
@@ -25,9 +25,9 @@
     "clean": "rm -rf .expo dist node_modules"
   },
   "dependencies": {
-    "@adhd-planner/ui": "workspace:*",
-    "@adhd-planner/models": "workspace:*",
-    "@adhd-planner/utils": "workspace:*",
+    "@personal-planner/ui": "workspace:*",
+    "@personal-planner/models": "workspace:*",
+    "@personal-planner/utils": "workspace:*",
     "@aws-amplify/react-native": "^1.0.8",
     "@expo/vector-icons": "^13.0.0",
     "@react-native-async-storage/async-storage": "1.18.2",

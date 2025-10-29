@@ -44,21 +44,21 @@ importers:
 
   apps/mobile:
     dependencies:
-      '@adhd-planner/models':
-        specifier: workspace:*
-        version: link:../../packages/models
-      '@adhd-planner/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
-      '@adhd-planner/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
       '@aws-amplify/react-native':
         specifier: ^1.0.8
         version: 1.0.8(react-native-get-random-values@2.0.0)(react-native@0.72.3)
       '@expo/vector-icons':
         specifier: ^13.0.0
         version: 13.0.0
+      '@personal-planner/models':
+        specifier: workspace:*
+        version: link:../../packages/models
+      '@personal-planner/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@personal-planner/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@react-native-async-storage/async-storage':
         specifier: 1.18.2
         version: 1.18.2(react-native@0.72.3)
@@ -171,13 +171,13 @@ importers:
 
   apps/web:
     dependencies:
-      '@adhd-planner/models':
+      '@personal-planner/models':
         specifier: workspace:*
         version: link:../../packages/models
-      '@adhd-planner/ui':
+      '@personal-planner/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@adhd-planner/utils':
+      '@personal-planner/utils':
         specifier: workspace:*
         version: link:../../packages/utils
       aws-amplify:
@@ -6147,7 +6147,7 @@ packages:
     dependencies:
       invariant: 2.2.4
       nullthrows: 1.1.1
-      react-native: 0.72.3(@babel/core@7.28.5)(@babel/preset-env@7.28.5)(react@18.2.0)
+      react-native: 0.72.3(@babel/core@7.20.2)(@babel/preset-env@7.20.2)(react@18.2.0)
 
   /@react-navigation/bottom-tabs@6.5.8(@react-navigation/native@6.1.7)(react-native-safe-area-context@4.6.3)(react-native-screens@3.22.0)(react-native@0.72.3)(react@18.2.0):
     resolution: {integrity: sha512-0aa/jXea+LyBgR5NoRNWGKw0aFhjHwCkusigMRXIrCA4kINauDcAO0w0iFbZeKfaTCVAix5kK5UxDJJ2aJpevg==}
@@ -15762,7 +15762,7 @@ packages:
       react-native: '>=0.56'
     dependencies:
       fast-base64-decode: 1.0.0
-      react-native: 0.72.3(@babel/core@7.28.5)(@babel/preset-env@7.28.5)(react@18.2.0)
+      react-native: 0.72.3(@babel/core@7.20.2)(@babel/preset-env@7.20.2)(react@18.2.0)
     dev: false
 
   /react-native-get-random-values@2.0.0(react-native@0.72.3):
@@ -15841,7 +15841,7 @@ packages:
     peerDependencies:
       react-native: '*'
     dependencies:
-      react-native: 0.72.3(@babel/core@7.28.5)(@babel/preset-env@7.28.5)(react@18.2.0)
+      react-native: 0.72.3(@babel/core@7.20.2)(@babel/preset-env@7.20.2)(react@18.2.0)
       whatwg-url-without-unicode: 8.0.0-3
     dev: false
 
