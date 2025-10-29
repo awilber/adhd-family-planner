@@ -28,7 +28,6 @@ export function ThemeSelector({ style }: ThemeSelectorProps) {
       <View style={{
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: 8,
       }}>
         {Object.entries(themes).map(([key, themeConfig]) => (
           <Text
@@ -46,7 +45,8 @@ export function ThemeSelector({ style }: ThemeSelectorProps) {
                 : theme.colors.neutral[700],
               fontSize: theme.fontSize.sm,
               fontWeight: currentTheme === key ? theme.fontWeight.medium : theme.fontWeight.normal,
-              cursor: 'pointer',
+              marginRight: 8,
+              marginBottom: 4,
             }}
           >
             {themeConfig.name}

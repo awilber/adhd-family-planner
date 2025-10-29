@@ -12,7 +12,7 @@ export function TopBanner({ children }: TopBannerProps) {
 
   return (
     <View style={{
-      position: 'fixed',
+      position: 'fixed' as any,
       top: 0,
       left: 0,
       right: 0,
