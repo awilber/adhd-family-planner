@@ -1,7 +1,7 @@
 {
-  "name": "@adhd-planner/utils",
+  "name": "@personal-planner/utils",
   "version": "1.0.0",
-  "description": "Shared utilities for ADHD Family Planner",
+  "description": "Shared utilities for Personal Planner",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {

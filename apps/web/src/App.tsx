@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { ThemeProvider, Button, SectionCard, ChecklistItem, useThemeContext } from '@adhd-planner/ui';
-import { formatTimeEstimate, isQuickWin } from '@adhd-planner/utils';
-import { allTasks, getQuickWinTasks, weeklyTasks, speedCleaningTasks, monthlyTasks, PlannerTask } from '@adhd-planner/models/src/plannerData';
+import { ThemeProvider, Button, SectionCard, ChecklistItem, useThemeContext } from '@personal-planner/ui';
+import { formatTimeEstimate, isQuickWin } from '@personal-planner/utils';
+import { allTasks, getQuickWinTasks, weeklyTasks, speedCleaningTasks, monthlyTasks, PlannerTask } from '@personal-planner/models/src/plannerData';
 
 const mockRoutines = [
   { id: '1', title: 'Morning Routine', category: 'personal' as const },
@@ -53,14 +53,14 @@ function AppContent() {
             color: theme.colors.neutral[900],
             marginBottom: 4
           }}>
-            ADHD Family Planner
+            Personal Planner
           </Text>
           <Text style={{ 
             fontSize: theme.fontSize.base, 
             color: theme.colors.neutral[600],
             textAlign: 'center'
           }}>
-            Reduce overwhelm, increase consistency
+            Organize your tasks and routines
           </Text>
         </View>
 

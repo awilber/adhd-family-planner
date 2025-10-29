@@ -1,5 +1,5 @@
 {
-  "name": "@adhd-planner/models",
+  "name": "@personal-planner/models",
   "version": "1.0.0",
   "description": "Generated GraphQL types and data access helpers",
   "main": "src/index.ts",

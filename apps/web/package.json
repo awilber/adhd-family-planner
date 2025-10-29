@@ -1,7 +1,7 @@
 {
-  "name": "adhd-planner-web",
+  "name": "personal-planner-web",
   "version": "1.0.0",
-  "description": "ADHD Family Planner - Web App",
+  "description": "Personal Planner - Web App",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -17,9 +17,9 @@
     "clean": "rm -rf dist node_modules .vite"
   },
   "dependencies": {
-    "@adhd-planner/models": "workspace:*",
-    "@adhd-planner/ui": "workspace:*",
-    "@adhd-planner/utils": "workspace:*",
+    "@personal-planner/models": "workspace:*",
+    "@personal-planner/ui": "workspace:*",
+    "@personal-planner/utils": "workspace:*",
     "aws-amplify": "^5.3.8",
     "react": "18.2.0",
     "react-dom": "18.2.0",

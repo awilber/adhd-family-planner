@@ -1,7 +1,7 @@
 {
-  "name": "adhd-family-planner",
+  "name": "personal-planner",
   "version": "1.0.0",
-  "description": "Cross-platform ADHD-centric family coordination app",
+  "description": "Cross-platform personal task management and planning app",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -9,12 +9,12 @@
   ],
   "scripts": {
     "dev": "concurrently \"pnpm dev:mobile\" \"pnpm dev:web\"",
-    "dev:mobile": "pnpm --filter adhd-planner-mobile dev",
-    "dev:web": "pnpm --filter adhd-planner-web dev", 
-    "build": "pnpm --filter adhd-planner-mobile build && pnpm --filter adhd-planner-web build",
+    "dev:mobile": "pnpm --filter personal-planner-mobile dev",
+    "dev:web": "pnpm --filter personal-planner-web dev", 
+    "build": "pnpm --filter personal-planner-mobile build && pnpm --filter personal-planner-web build",
     "test": "pnpm --recursive test",
     "test:unit": "pnpm --recursive test:unit",
-    "test:e2e": "pnpm --filter adhd-planner-mobile test:e2e",
+    "test:e2e": "pnpm --filter personal-planner-mobile test:e2e",
     "lint": "pnpm --recursive lint",
     "lint:fix": "pnpm --recursive lint:fix",
     "typecheck": "pnpm --recursive typecheck",
