@@ -255,5 +255,5 @@ export const themes = {
   },
 } as const;
 
-export type Theme = typeof themes['planner-original'];
+export type Theme = typeof themes[keyof typeof themes];
 export type ThemeKey = keyof typeof themes;

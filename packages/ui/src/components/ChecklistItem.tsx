@@ -54,7 +54,7 @@ export const ChecklistItem: React.FC<ChecklistItemProps> = ({
     padding: theme.spacing[4],
     backgroundColor: completed 
       ? theme.colors.neutral[50] 
-      : theme.colors.neutral[0],
+      : theme.colors.neutral[50],
     borderRadius: theme.borderRadius.base,
     borderWidth: 1,
     borderColor: completed 
