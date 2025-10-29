@@ -86,6 +86,13 @@ export const ChecklistItem: React.FC<ChecklistItemProps> = ({
     flexDirection: 'column',
   };
 
+  const titleRowStyle: ViewStyle = {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginBottom: notes ? theme.spacing[1] : 0,
+  };
+
   const titleStyle: TextStyle = {
     fontSize: theme.fontSize.lg,
     fontWeight: theme.fontWeight.medium,
@@ -95,14 +102,13 @@ export const ChecklistItem: React.FC<ChecklistItemProps> = ({
     fontFamily: theme.fonts.body,
     lineHeight: theme.lineHeight.normal,
     textDecorationLine: completed ? 'line-through' : 'none',
-    marginBottom: notes || timeEstimate ? theme.spacing[1] : 0,
+    flex: 1,
+    marginRight: timeEstimate ? theme.spacing[2] : 0,
   };
 
-  const metaRowStyle: ViewStyle = {
+  const notesRowStyle: ViewStyle = {
     flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: theme.spacing[2],
+    alignItems: 'flex-start',
   };
 
   const notesStyle: TextStyle = {
@@ -144,23 +150,22 @@ export const ChecklistItem: React.FC<ChecklistItemProps> = ({
       </View>
       
       <View style={contentStyle}>
-        <Text style={titleStyle}>{title}</Text>
-        
-        {(notes || timeEstimate) && (
-          <View style={metaRowStyle}>
-            {timeEstimate && (
-              <View style={timeChipStyle}>
-                <Text style={timeTextStyle}>
-                  {timeIndicator?.text || `${timeEstimate}m`}
-                </Text>
-              </View>
-            )}
-            
-            {notes && (
-              <Text style={notesStyle} numberOfLines={2}>
-                {notes}
+        <View style={titleRowStyle}>
+          <Text style={titleStyle}>{title}</Text>
+          {timeEstimate && (
+            <View style={timeChipStyle}>
+              <Text style={timeTextStyle}>
+                {timeIndicator?.text || `${timeEstimate}m`}
               </Text>
-            )}
+            </View>
+          )}
+        </View>
+        
+        {notes && (
+          <View style={notesRowStyle}>
+            <Text style={notesStyle} numberOfLines={2}>
+              {notes}
+            </Text>
           </View>
         )}
       </View>

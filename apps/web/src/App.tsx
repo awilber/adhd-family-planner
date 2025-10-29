@@ -1,14 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { ThemeProvider, Button, SectionCard, ChecklistItem } from '@adhd-planner/ui';
 import { formatTimeEstimate, isQuickWin } from '@adhd-planner/utils';
-
-const mockTasks = [
-  { id: '1', title: 'Quick kitchen clean', timeEstimate: 5, completed: false },
-  { id: '2', title: 'Sort mail', timeEstimate: 3, completed: true },
-  { id: '3', title: 'Deep clean refrigerator', timeEstimate: 25, completed: false },
-  { id: '4', title: 'Organize desk area', timeEstimate: 12, completed: false },
-];
+import { allTasks, getQuickWinTasks, weeklyTasks, speedCleaningTasks, monthlyTasks, PlannerTask } from '@adhd-planner/models/src/plannerData';
 
 const mockRoutines = [
   { id: '1', title: 'Morning Routine', category: 'personal' as const },
@@ -17,16 +11,26 @@ const mockRoutines = [
 ];
 
 function App() {
+  const [tasks, setTasks] = useState<PlannerTask[]>(allTasks);
+  
   const handleTaskToggle = (taskId: string) => {
-    console.log('Task toggled:', taskId);
+    setTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.id === taskId ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
 
   const handleTaskLongPress = (taskId: string) => {
     console.log('Task long pressed:', taskId);
   };
 
-  const quickWinTasks = mockTasks.filter(task => isQuickWin(task.timeEstimate));
-  const otherTasks = mockTasks.filter(task => !isQuickWin(task.timeEstimate));
+  // Get different task categories with proper typing
+  const quickWinTasks = tasks.filter(task => task.isQuickWin);
+  const dailyTasks = tasks.filter(task => task.category === 'daily' && !task.isQuickWin);
+  const weeklyKitchenTasks = tasks.filter(task => task.category === 'weekly' && task.room === 'Kitchen');
+  const speedCleanTasks = tasks.filter(task => task.category === 'room-based' && task.room === 'Kitchen');
+  const monthlyKitchenTasks = tasks.filter(task => task.category === 'monthly' && task.room === 'Kitchen');
 
   return (
     <ThemeProvider initialTheme="planner-original">
@@ -95,9 +99,9 @@ function App() {
             </View>
           </SectionCard>
 
-          {/* Other Tasks Section */}
+          {/* Daily Tasks Section */}
           <SectionCard 
-            title="Other Tasks" 
+            title="Daily Tasks" 
             category="cleaning"
             headerAction={
               <Button 
@@ -109,7 +113,7 @@ function App() {
             }
           >
             <View>
-              {otherTasks.map(task => (
+              {dailyTasks.slice(0, 8).map(task => (
                 <ChecklistItem
                   key={task.id}
                   id={task.id}
@@ -117,6 +121,91 @@ function App() {
                   completed={task.completed}
                   timeEstimate={task.timeEstimate}
                   notes={task.timeEstimate && task.timeEstimate > 15 ? 'Consider breaking this into smaller steps' : undefined}
+                  onToggle={handleTaskToggle}
+                  onLongPress={handleTaskLongPress}
+                />
+              ))}
+            </View>
+          </SectionCard>
+
+          {/* Weekly Kitchen Tasks Section */}
+          <SectionCard 
+            title="Weekly Kitchen Tasks (Monday)" 
+            category="cleaning"
+            headerAction={
+              <Button 
+                title="Mark All Done" 
+                variant="secondary" 
+                size="sm" 
+                onPress={() => console.log('Mark all kitchen done')}
+              />
+            }
+          >
+            <View>
+              {weeklyKitchenTasks.map(task => (
+                <ChecklistItem
+                  key={task.id}
+                  id={task.id}
+                  title={task.title}
+                  completed={task.completed}
+                  timeEstimate={task.timeEstimate}
+                  onToggle={handleTaskToggle}
+                  onLongPress={handleTaskLongPress}
+                />
+              ))}
+            </View>
+          </SectionCard>
+
+          {/* Speed Cleaning Section */}
+          <SectionCard 
+            title="Kitchen Speed Clean (5-10 mins)" 
+            category="quick"
+            headerAction={
+              <Button 
+                title="Start Timer" 
+                variant="quick-win" 
+                size="sm" 
+                onPress={() => console.log('Start speed clean timer')}
+              />
+            }
+          >
+            <View>
+              {speedCleanTasks.slice(0, 6).map(task => (
+                <ChecklistItem
+                  key={task.id}
+                  id={task.id}
+                  title={task.title}
+                  completed={task.completed}
+                  timeEstimate={task.timeEstimate}
+                  onToggle={handleTaskToggle}
+                  onLongPress={handleTaskLongPress}
+                />
+              ))}
+            </View>
+          </SectionCard>
+
+          {/* Monthly Kitchen Deep Clean */}
+          <SectionCard 
+            title="Monthly Kitchen Deep Clean" 
+            category="notes"
+            headerAction={
+              <Button 
+                title="Schedule" 
+                variant="ghost" 
+                size="sm" 
+                onPress={() => console.log('Schedule monthly clean')}
+              />
+            }
+          >
+            <View>
+              {monthlyKitchenTasks.map(task => (
+                <ChecklistItem
+                  key={task.id}
+                  id={task.id}
+                  title={task.title}
+                  completed={task.completed}
+                  timeEstimate={task.timeEstimate}
+                  notes={task.timeEstimate && task.timeEstimate > 20 ? 'Schedule when you have dedicated time' : undefined}
                   onToggle={handleTaskToggle}
                   onLongPress={handleTaskLongPress}
                 />
